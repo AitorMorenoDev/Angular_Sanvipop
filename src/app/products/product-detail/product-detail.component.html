@@ -1,0 +1,10 @@
+<div class="mt-4">
+  <product-card
+    class="col"
+    [product]="product"
+    (deleted)="goBack()"
+  />
+</div>
+<div class="mt-4 mb-4">
+  <button class="btn btn-success" (click)="goBack()">Volver</button>
+</div>

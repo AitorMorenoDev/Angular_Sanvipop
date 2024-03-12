@@ -1,0 +1,103 @@
+<form class="mt-4" (ngSubmit)="addProduct()" [formGroup]="productForm">
+  <div class="mb-3">
+    <label for="title">Título</label>
+    <input
+      type="text"
+      class="form-control"
+      formControlName="title"
+      id="title"
+      placeholder="Nombre del producto"
+      [ngClass]="{
+        'is-valid': title.touched && title.valid,
+        'is-invalid': title.touched && !title.valid
+      }"
+    />
+    @if(title.errors?.['required']) {
+      <div class="invalid-feedback">El título es obligatorio</div>
+      }
+      @if(title.errors?.['minlength']) {
+      <div class="invalid-feedback">
+        Debes añadir al menos
+        {{title.errors?.['minlength'].requiredLength - title.errors?.['minlength'].actualLength}}
+        caracteres más
+      </div>
+      }
+  </div>
+  <div class="mb-3">
+    <label for="description">Descripción</label>
+    <textarea
+      class="form-control"
+      id="description"
+      formControlName="description"
+      rows="3"
+      placeholder="Descripción..."
+      [ngClass]="{
+        'is-valid': description.touched && description.valid,
+        'is-invalid': description.touched && !description.valid
+      }"
+    ></textarea>
+    <div class="invalid-feedback">La descripción es obligatoria.</div>
+  </div>
+  <div class="mb-3">
+    <label for="price">Precio</label>
+    <input
+      type="number"
+      step="0.01"
+      class="form-control"
+      formControlName="price"
+      id="price"
+      placeholder="Precio"
+      [ngClass]="{
+        'is-valid': price.touched && price.valid,
+        'is-invalid': price.touched && !price.valid
+      }"
+    />
+    @if(price.errors?.['required']) {
+      <div class="invalid-feedback">El precio es obligatorio.</div>
+    }
+    @if(price.errors?.['positiveValue']) {
+    <div class="invalid-feedback">El precio debe ser mayor a cero</div>
+    }
+  </div>
+  <div class="mb-3">
+    <label for="category">Categoría</label>
+    <select
+      id="category"
+      class="form-select"
+      formControlName="category"
+      [ngClass]="{
+        'is-valid': category.touched && category.valid,
+        'is-invalid': category.touched && !category.valid
+      }"
+    >
+      <option value="0" selected>Elige una categoría...</option>
+      @for (c of categories; track c.id) {
+      <option [value]="c.id">{{ c.name }}</option>
+      }
+    </select>
+    <div class="invalid-feedback">Debes seleccionar una categoría.</div>
+  </div>
+  <div class="mb-3">
+    <label for="image">Foto principal</label>
+    <input
+      type="file"
+      class="form-control"
+      id="image"
+      formControlName="mainPhoto"
+      (change)="imageBase64($event)"
+      [ngClass]="{
+        'is-valid': mainPhoto.touched && mainPhoto.valid,
+        'is-invalid': mainPhoto.touched && !mainPhoto.valid
+      }"
+    />
+    <div class="invalid-feedback">La foto es obligatoria.</div>
+  </div>
+
+  @if(photoBase64) {
+    <img [src]="photoBase64" alt="" class="img-thumbnail mb-3" />
+  }
+
+  <div>
+    <button type="submit" class="btn btn-primary btn-lg" [disabled]="productForm.invalid">Crear</button>
+  </div>
+</form>
