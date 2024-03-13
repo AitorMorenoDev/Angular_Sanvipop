@@ -1,0 +1,46 @@
+<form [formGroup]="registerForm">
+  <legend>Create an account</legend>
+
+  <div class="mb-3">
+    <label for="name">Name:</label>
+    <input type="text" class="form-control" id="name" formControlName="name" placeholder="Name"
+    [ngClass]="validClasses(registerForm.controls.name, 'is-valid', 'is-invalid')"
+    />
+    @if(registerForm.controls.name.errors?.['required']) {
+      <div class="invalid-feedback">El nombre de usuario es obligatorio</div>
+    }
+  </div>
+
+  <div class="mb-3" formGroupName="emailGroup">
+    <label for="email">Email:</label>
+    <p><input type="email" class="form-control" id="email" placeholder="Email" formControlName="email"/></p>
+    <label for="confirmEmail">Confirm Email:</label>
+    <p><input type="email" class="form-control" id="confirmEmail" placeholder="Repeat email" formControlName="confirmEmail"/></p>
+  </div>
+
+  <div class="mb-3">
+    <label for="password">Password:</label>
+    <input type="password" class="form-control" id="password" formControlName="password" placeholder="Password" />
+  </div>
+
+  <div class="form-row">
+    <div class="mb-3 col">
+      <label for="lat">Latitude:</label>
+      <input type="text" class="form-control" id="lat" formControlName="lat" placeholder="Geolocating..." readonly />
+    </div>
+    <div class="mb-3 col">
+      <label for="lng">Longitude:</label>
+      <input type="text" class="form-control" id="lng" formControlName="lng" placeholder="Geolocating..." readonly />
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="avatar">Avatar image</label>
+    <input type="file" class="form-control" id="avatar" formControlName="avatar" />
+  </div>
+
+  <img src="" alt="" id="imgPreview" class="img-thumbnail d-none" />
+  <p class="text-danger" id="errorInfo"></p>
+  <a class="btn btn-danger" (click)="goLogin()" role="button">Go back</a>
+  <button type="submit" class="btn btn-primary m-lg-1">Create account</button>
+</form>

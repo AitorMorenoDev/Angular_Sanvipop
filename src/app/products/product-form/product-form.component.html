@@ -7,10 +7,7 @@
       formControlName="title"
       id="title"
       placeholder="Nombre del producto"
-      [ngClass]="{
-        'is-valid': title.touched && title.valid,
-        'is-invalid': title.touched && !title.valid
-      }"
+      [ngClass]="validClasses(productForm.controls.title, 'is-valid', 'is-invalid')"
     />
     @if(title.errors?.['required']) {
       <div class="invalid-feedback">El título es obligatorio</div>
@@ -31,10 +28,7 @@
       formControlName="description"
       rows="3"
       placeholder="Descripción..."
-      [ngClass]="{
-        'is-valid': description.touched && description.valid,
-        'is-invalid': description.touched && !description.valid
-      }"
+      [ngClass]="validClasses(productForm.controls.title, 'is-valid', 'is-invalid')"
     ></textarea>
     <div class="invalid-feedback">La descripción es obligatoria.</div>
   </div>
@@ -47,10 +41,8 @@
       formControlName="price"
       id="price"
       placeholder="Precio"
-      [ngClass]="{
-        'is-valid': price.touched && price.valid,
-        'is-invalid': price.touched && !price.valid
-      }"
+      [ngClass]="validClasses(productForm.controls.title, 'is-valid', 'is-invalid')"
+
     />
     @if(price.errors?.['required']) {
       <div class="invalid-feedback">El precio es obligatorio.</div>
@@ -65,10 +57,8 @@
       id="category"
       class="form-select"
       formControlName="category"
-      [ngClass]="{
-        'is-valid': category.touched && category.valid,
-        'is-invalid': category.touched && !category.valid
-      }"
+      [ngClass]="validClasses(productForm.controls.title, 'is-valid', 'is-invalid')"
+
     >
       <option value="0" selected>Elige una categoría...</option>
       @for (c of categories; track c.id) {
@@ -85,10 +75,8 @@
       id="image"
       formControlName="mainPhoto"
       (change)="imageBase64($event)"
-      [ngClass]="{
-        'is-valid': mainPhoto.touched && mainPhoto.valid,
-        'is-invalid': mainPhoto.touched && !mainPhoto.valid
-      }"
+      [ngClass]="validClasses(productForm.controls.title, 'is-valid', 'is-invalid')"
+
     />
     <div class="invalid-feedback">La foto es obligatoria.</div>
   </div>

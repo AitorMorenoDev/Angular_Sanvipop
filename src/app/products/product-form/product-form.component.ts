@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import {
+  FormControl,
   NonNullableFormBuilder,
   ReactiveFormsModule,
   Validators
@@ -20,6 +21,7 @@ import { NgClass } from '@angular/common';
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.css',
 })
+
 export class ProductFormComponent implements OnInit, CanComponentDeactivate {
   categories: Category[] = [];
 
@@ -60,6 +62,13 @@ export class ProductFormComponent implements OnInit, CanComponentDeactivate {
         '¿Quieres abandonar la página?. Se perderán los cambios no guardados.'
       )
     );
+  }
+
+  validClasses(formControl: FormControl, validClass: string, errorClass: string) {
+    return {
+      [validClass]: formControl.touched && formControl.valid,
+      [errorClass]: formControl.touched && formControl.invalid,
+    }
   }
 
   addProduct() {
