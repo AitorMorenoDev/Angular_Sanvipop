@@ -1,14 +1,75 @@
 <div class="card h-100 shadow">
+  <!-- Image -->
   <img class="card-img-top" alt="" [src]="product.mainPhoto" [routerLink]="['/products', product.id]" />
+
+  <!-- Card Body -->
   <div class="card-body">
-    <button class="btn btn-danger btn-sm float-end" (click)="deleteProduct()">Borrar</button>
     <h5 class="card-title" [routerLink]="['/products', product.id]">{{ product.title }}</h5>
     <p class="card-text">{{ product.description }}</p>
+    <div class="row text-muted">
+      <div class="col">{{ product.category.name }}</div>
+      <div class="col-auto">{{ product.price | currency:'EUR' }} €</div>
+    </div>
   </div>
+
+  <!-- Card footer -->
   <div class="card-footer bg-transparent text-muted">
     <div class="row">
-      <div class="col">{{ product.category.name }}</div>
-      <div class="col text-end">{{ product.price | currency:'EUR' }} €</div>
+
+      <div class="col-auto avatar ps-1 pe-1">
+        <img class="rounded-circle" src="{{product.owner.photo}}" width="40px" height="40px" alt="" />
+      </div>
+
+      <div class="col">
+        <div class="name">{{ product.owner.name }}</div>
+        <div>
+          <small class="text-muted">{{ product.datePublished }}</small>
+        </div>
+      </div>
+
+      @if (product.mine && product.status === 1) {
+      <div class="col-auto">
+        <button class="btn btn-danger btn-sm float-end m-lg-1"
+        [swal]="{
+        title: 'Delete product?',
+        text: 'Are you sure you want to delete this product? ' +
+         'You will not be able to recover this product!',
+        icon: 'warning',
+        showCancelButton: true
+        }"
+        (confirm)="deleteProduct()"
+        (dismiss)="cancel()">
+          <fa-icon [icon]="icons.faTrash"></fa-icon>
+        </button>
+
+        <button class="btn btn-warning btn-sm float-end m-lg-1" (click)="goEditPage()">
+          <fa-icon [icon]="icons.faPencil"></fa-icon>
+        </button>
+      </div>
+      } @else { <!-- (I understand that the user can bookmark other's users products, it makes no sense to mark own products.-->
+        @if (product.bookmarked) {
+          <div class="col-auto">
+            <button class="btn btn-danger btn-sm float-end m-lg-1" (click)="unbookmark()">
+              <fa-icon [icon]="icons.faBookmark"></fa-icon>
+            </button>
+          </div>
+        } @else {
+          <div class="col-auto">
+            <button class="btn btn-success btn-sm float-end m-lg-1" (click)="bookmark()">
+              <fa-icon [icon]="icons.faBookmark"></fa-icon>
+            </button>
+          </div>
+        }
+      }
+
+
+      <div class="col-auto text-muted text-right">
+        <div class="col-auto text-right">
+          <small>{{ product.numVisits }} <fa-icon [icon]="icons.faEye"></fa-icon></small>
+        </div>
+        <div><small>{{ product.distance }}km</small></div>
+      </div>
+
     </div>
   </div>
 </div>

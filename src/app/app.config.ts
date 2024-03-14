@@ -22,8 +22,3 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(SweetAlert2Module.forRoot()),
   ],
 };
-
-
-
-// No funcionan botones de Google y Facebook (¿qué hacer con ellos?)
-// Manejo de editar, borrar, etc, productos propios. ¿Igual que en el proyecto anterior? ¿Utilizando el servicio /users/me?

@@ -6,7 +6,6 @@ import {Router} from "@angular/router";
 @Injectable({
   providedIn: 'root'
 })
-
 export class LoadGoogleApiService {
   #loader: Promise<void>;
   #credential$ = new Subject<google.accounts.id.CredentialResponse>();

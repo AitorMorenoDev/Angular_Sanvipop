@@ -1,24 +1,25 @@
 import {inject, Injectable, signal} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
-import {User, UserLogin} from "../interfaces/user";
+import {User, UserLogin, UserLoginRRSS} from "../interfaces/user";
 import {catchError, map, Observable, of, throwError} from "rxjs";
 import {TokenResponse} from "../interfaces/responses";
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class AuthService {
   #http = inject(HttpClient);
   #authUrl = 'auth';
   #router = inject(Router);
   #logged = signal(false);
 
+  // Getter to check if the user is logged
   get logged() {
     return this.#logged.asReadonly();
   }
 
+  // Method to login by email and password
   login(data: UserLogin): Observable<void> {
     return this.#http.post<TokenResponse>(`${this.#authUrl}/login`, data).pipe
     (map(r => {
@@ -35,8 +36,9 @@ export class AuthService {
     );
   }
 
-  loginGoogle(token: string): Observable<void> {
-    return this.#http.post<TokenResponse>(`${this.#authUrl}/google`, {token}).pipe(
+  // Method to login by Google
+  loginGoogle(data: UserLoginRRSS): Observable<void> {
+    return this.#http.post<TokenResponse>(`${this.#authUrl}/google`, data).pipe(
       map(r => {
         localStorage.setItem('token', r.accessToken);
         this.#logged.set(true);
@@ -50,8 +52,9 @@ export class AuthService {
     );
   }
 
-  loginFacebook(token: string): Observable<void> {
-    return this.#http.post<TokenResponse>(`${this.#authUrl}/facebook`, {token}).pipe(
+  // Method to login by Facebook
+  loginFacebook(data: UserLoginRRSS): Observable<void> {
+    return this.#http.post<TokenResponse>(`${this.#authUrl}/facebook`, data).pipe(
       map(r => {
         localStorage.setItem('token', r.accessToken);
         this.#logged.set(true);
@@ -65,6 +68,7 @@ export class AuthService {
     );
   }
 
+  // Method to register a new user
   register(data: User): Observable<void> {
     return this.#http.post<void>(`${this.#authUrl}/register`, data).pipe
     (map(() => {
@@ -77,16 +81,19 @@ export class AuthService {
     );
   }
 
+  // Method to logout
   logout(): void {
     localStorage.removeItem('token');
     this.#logged.set(false);
     this.#router.navigate(['/auth/login']).then(r => r);
   }
 
+  // Auxiliary method to validate the token
   validateToken(): Observable<void> {
     return this.#http.get<void>(`${this.#authUrl}/validate`);
   }
 
+  // Method to check if the user is logged
   isLogged(): Observable<boolean> {
     const token = localStorage.getItem('token');
 

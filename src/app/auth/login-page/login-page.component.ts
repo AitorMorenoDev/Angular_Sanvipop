@@ -1,14 +1,14 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, ReactiveFormsModule, NonNullableFormBuilder, Validators} from '@angular/forms';
 import {Router, RouterOutlet} from '@angular/router';
 import {AuthService} from "../services/auth.service";
 import {MyGeolocation} from "../../geolocation";
 import {NgClass} from "@angular/common";
-import {UserLogin} from "../interfaces/user";
+import {UserLogin, UserLoginRRSS} from "../interfaces/user";
 import {LoadGoogleApiService} from "../google-login/load-google-api.service";
 import {Subscription} from "rxjs";
 import {GoogleLoginDirective} from "../google-login/google-login.directive";
-import {faFacebook, faGoogle} from "@fortawesome/free-brands-svg-icons";
+import {faFacebook} from "@fortawesome/free-brands-svg-icons";
 import {FbLoginDirective} from "../facebook-login/fb-login.directive";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 
@@ -20,15 +20,16 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
   styleUrl: './login-page.component.css'
 })
 export class LoginPageComponent implements OnInit, OnDestroy {
+  #ngZone = inject(NgZone);
   #router = inject(Router);
   #fb = inject(NonNullableFormBuilder);
   #authService = inject(AuthService);
   #loadGoogle = inject(LoadGoogleApiService);
-  iconGoogle = faGoogle;
   iconFacebook = faFacebook;
   credentialsSub!: Subscription;
   position: { latitude: number; longitude: number } = {latitude: 0, longitude: 0};
 
+  // Method OnInit to get the user's location
   async ngOnInit() {
     try {
       this.position = await MyGeolocation.getLocation();
@@ -36,21 +37,28 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       console.error("Error getting location: ", error);
       this.position = {latitude: 0, longitude: 0};
     }
+
+    // Subscribe to the logged signal
+    this.credentialsSub = this.#loadGoogle.credential$.subscribe((response) => {
+      // Log into the server with the Google token
+      this.#ngZone.run(() => {
+        if (response.credential) {
+          this.#authService.loginGoogle({token: response.credential, lat: this.position.latitude, lng: this.position.longitude}).subscribe(
+            () => {
+              this.#router.navigate(['/products']).then(r => r);
+            }
+          );
+        }
+      });
+    });
   }
 
+  // Method OnDestroy to unsubscribe
   ngOnDestroy() {
     this.credentialsSub.unsubscribe();
   }
 
-  loggedFacebook(response: fb.StatusResponse) {
-    console.log("Facebook response: ", response.authResponse.accessToken);
-    this.#router.navigate(['/products']).then(r => r);
-  }
-
-  showError(error: any) {
-    console.error(error);
-  }
-
+  // Method to create the login form
   email = this.#fb.control('', [Validators.required]);
   password = this.#fb.control('', [Validators.required]);
 
@@ -66,6 +74,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Method to login by email and password
   login() {
     const user = {
       email: this.email.value,
@@ -80,19 +89,28 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       });
   }
 
-  loginGoogle() {
-    this.credentialsSub = this.#loadGoogle.credential$.subscribe((response) => {
-      if (response.credential) {
-        console.log("Google response: ", response);
+  // Method to login by Facebook
+  loggedFacebook(response: fb.StatusResponse) {
+    const user = {
+      token: response.authResponse.accessToken,
+      lat: this.position.latitude,
+      lng: this.position.longitude
+    }
+    console.log("Facebook response: ", response.authResponse.accessToken);
+    console.log("latitude: ", this.position.latitude);
+    console.log("longitude: ", this.position.longitude);
+    this.#authService.loginFacebook(user as UserLoginRRSS)
+      .subscribe(() => {
         this.#router.navigate(['/products']).then(r => r);
-      }
-    });
+      });
   }
 
-  loginFacebook() {
-
+  showError(error: any) {
+    console.error(error);
   }
 
+
+  // Method to go to the register page
   goRegister() {
     this.#router.navigate(['/auth/register']);
   }

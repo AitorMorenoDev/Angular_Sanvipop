@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { FB_CONFIG } from './facebook-login.config';
+import { Observable, ReplaySubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',

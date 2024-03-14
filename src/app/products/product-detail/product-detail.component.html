@@ -6,5 +6,24 @@
   />
 </div>
 <div class="mt-4 mb-4">
-  <button class="btn btn-success" (click)="goBack()">Volver</button>
+  <button class="btn btn-dark" (click)="goBack()">Go back</button>
+  @if (product.status === 3) {
+    <button class="m-lg-3 btn btn-warning" (click)="buyProduct()">Buy product<fa-icon class="m-lg-1" [icon]="faCartPlus"></fa-icon> </button>
+  } @else if (product.status === 1) {
+    <hr>
+    <div class="card p-3 text-bg-info">
+      <div class="row">
+        <h3>Product bought by: </h3>
+        <div class="col-auto avatar ps-1 pe-1">
+          <!-- {product.soldTo.photo}} -->
+          <img class="rounded-circle" src="{{product.owner.photo}}"  width="40px" height="40px" alt="" />
+        </div>
+
+        <div class="col">
+          <!-- {{product.soldTo.name}} -->
+          <h5 class="name"><u>{{ product.owner.name }}</u></h5>
+        </div>
+      </div>
+    </div>
+  }
 </div>

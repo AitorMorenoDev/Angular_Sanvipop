@@ -5,6 +5,12 @@ export interface UserLogin {
   lng?: number;
 }
 
+export interface UserLoginRRSS {
+  token: string | undefined;
+  lat?: number;
+  lng?: number;
+}
+
 export interface User {
   id?: number;
   name: string;
@@ -14,17 +20,4 @@ export interface User {
   lat: number;
   lng: number;
   me?: boolean;
-}
-
-export interface UserProfileEdit {
-  name: string;
-  email: string;
-}
-
-export interface  UserAvatarEdit {
-  photo: string;
-}
-
-export interface UserPassWordEdit {
-  password: string;
 }
