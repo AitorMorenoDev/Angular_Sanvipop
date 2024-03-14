@@ -1,46 +1,74 @@
-<form [formGroup]="registerForm">
+<form class="mt-4" (ngSubmit)="register()" [formGroup]="registerForm">
   <legend>Create an account</legend>
 
   <div class="mb-3">
     <label for="name">Name:</label>
     <input type="text" class="form-control" id="name" formControlName="name" placeholder="Name"
-    [ngClass]="validClasses(registerForm.controls.name, 'is-valid', 'is-invalid')"
-    />
-    @if(registerForm.controls.name.errors?.['required']) {
+      [ngClass]="validClasses(name, 'is-valid', 'is-invalid')"/>
+    @if(name.errors?.['required']) {
       <div class="invalid-feedback">El nombre de usuario es obligatorio</div>
     }
   </div>
 
   <div class="mb-3" formGroupName="emailGroup">
     <label for="email">Email:</label>
-    <p><input type="email" class="form-control" id="email" placeholder="Email" formControlName="email"/></p>
+    <p><input type="email" class="form-control" id="email" placeholder="Email" formControlName="email"
+          [ngClass]="validClasses(emailGroup.controls.email, 'is-valid', 'is-invalid')"/>
+    @if(emailGroup.controls.email.errors?.['required']) {
+      <div class="invalid-feedback">El email es obligatorio</div>
+    }
+    </p>
+
     <label for="confirmEmail">Confirm Email:</label>
-    <p><input type="email" class="form-control" id="confirmEmail" placeholder="Repeat email" formControlName="confirmEmail"/></p>
+    <p><input type="email" class="form-control" id="confirmEmail" placeholder="Repeat email" formControlName="confirmEmail"
+          [ngClass]="validClasses(emailGroup.controls.confirmEmail, 'is-valid', 'is-invalid')"/>
+    @if(emailGroup.controls.confirmEmail.errors?.['required']) {
+      <div class="invalid-feedback">La confirmación de email es obligatoria</div>
+    } @else {
+      @if (emailGroup.errors?.['matchEmail']) {
+        <div class="invalid-feedback">Los emails no coinciden</div>
+      }
+    }
+    </p>
   </div>
 
   <div class="mb-3">
     <label for="password">Password:</label>
-    <input type="password" class="form-control" id="password" formControlName="password" placeholder="Password" />
+    <input type="password" class="form-control" id="password" formControlName="password" placeholder="Password"
+       [ngClass]="validClasses(password, 'is-valid', 'is-invalid')"/>
+    @if(password.errors?.['required']) {
+      <div class="invalid-feedback">La contraseña es obligatoria</div>
+    } @else {
+      @if (password.errors?.['minlength']) {
+        <div class="invalid-feedback">La contraseña debe tener al menos 4 caracteres</div>
+      }
+    }
   </div>
 
   <div class="form-row">
     <div class="mb-3 col">
       <label for="lat">Latitude:</label>
-      <input type="text" class="form-control" id="lat" formControlName="lat" placeholder="Geolocating..." readonly />
+      <input type="text" class="form-control" id="lat" formControlName="lat" placeholder="Geolocating..." readonly
+      [value]="position.latitude"/>
     </div>
     <div class="mb-3 col">
       <label for="lng">Longitude:</label>
-      <input type="text" class="form-control" id="lng" formControlName="lng" placeholder="Geolocating..." readonly />
+      <input type="text" class="form-control" id="lng" formControlName="lng" placeholder="Geolocating..." readonly
+      [value]="position.longitude"/>
     </div>
   </div>
 
   <div class="mb-3">
-    <label for="avatar">Avatar image</label>
-    <input type="file" class="form-control" id="avatar" formControlName="avatar" />
+    <label for="photo">Avatar image</label>
+    <input type="file" class="form-control" id="photo" formControlName="photo"
+           (change)="imageBase64($event)"
+           [ngClass]="validClasses(photo, 'is-valid', 'is-invalid')"/>
+    @if(photo.errors?.['required']) {
+      <div class="invalid-feedback">El avatar es obligatorio</div>
+    }
   </div>
 
   <img src="" alt="" id="imgPreview" class="img-thumbnail d-none" />
-  <p class="text-danger" id="errorInfo"></p>
   <a class="btn btn-danger" (click)="goLogin()" role="button">Go back</a>
-  <button type="submit" class="btn btn-primary m-lg-1">Create account</button>
+  <button type="submit" class="btn btn-primary m-lg-1" [disabled]="registerForm.invalid">Create account</button>
 </form>

@@ -12,13 +12,13 @@
     @if(title.errors?.['required']) {
       <div class="invalid-feedback">El título es obligatorio</div>
       }
-      @if(title.errors?.['minlength']) {
-      <div class="invalid-feedback">
-        Debes añadir al menos
-        {{title.errors?.['minlength'].requiredLength - title.errors?.['minlength'].actualLength}}
-        caracteres más
-      </div>
-      }
+    @if(title.errors?.['minlength']) {
+    <div class="invalid-feedback">
+      Debes añadir al menos
+      {{title.errors?.['minlength'].requiredLength - title.errors?.['minlength'].actualLength}}
+      caracteres más
+    </div>
+    }
   </div>
   <div class="mb-3">
     <label for="description">Descripción</label>
@@ -28,7 +28,7 @@
       formControlName="description"
       rows="3"
       placeholder="Descripción..."
-      [ngClass]="validClasses(productForm.controls.title, 'is-valid', 'is-invalid')"
+      [ngClass]="validClasses(productForm.controls.description, 'is-valid', 'is-invalid')"
     ></textarea>
     <div class="invalid-feedback">La descripción es obligatoria.</div>
   </div>
@@ -41,7 +41,7 @@
       formControlName="price"
       id="price"
       placeholder="Precio"
-      [ngClass]="validClasses(productForm.controls.title, 'is-valid', 'is-invalid')"
+      [ngClass]="validClasses(productForm.controls.price, 'is-valid', 'is-invalid')"
 
     />
     @if(price.errors?.['required']) {
@@ -57,10 +57,10 @@
       id="category"
       class="form-select"
       formControlName="category"
-      [ngClass]="validClasses(productForm.controls.title, 'is-valid', 'is-invalid')"
+      [ngClass]="validClasses(productForm.controls.category, 'is-valid', 'is-invalid')"
 
     >
-      <option value="0" selected>Elige una categoría...</option>
+      <option value="0" selected disabled>Elige una categoría...</option>
       @for (c of categories; track c.id) {
       <option [value]="c.id">{{ c.name }}</option>
       }
@@ -75,7 +75,7 @@
       id="image"
       formControlName="mainPhoto"
       (change)="imageBase64($event)"
-      [ngClass]="validClasses(productForm.controls.title, 'is-valid', 'is-invalid')"
+      [ngClass]="validClasses(productForm.controls.mainPhoto, 'is-valid', 'is-invalid')"
 
     />
     <div class="invalid-feedback">La foto es obligatoria.</div>

@@ -1,24 +1,31 @@
 <nav class="navbar navbar-expand navbar-dark bg-dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">{{ title }}</a>
-    <ul class="navbar-nav me-auto mb-lg-0">
-      <li class="nav-item">
-        <a
-          class="nav-link active"
-          [routerLink]="['products']"
-          [routerLinkActive]="['active']"
-          [routerLinkActiveOptions]="{ exact: true }"
-          >Home</a
-        >
-      </li>
-      <li class="nav-item">
-        <a
-          class="nav-link"
-          [routerLink]="['products', 'add']"
-          [routerLinkActive]="['active']"
-          >Nuevo producto</a
-        >
-      </li>
-    </ul>
+    @if (logged()) {
+      <ul class="navbar-nav me-auto mb-lg-0">
+        <li class="nav-item">
+          <a
+            class="nav-link active"
+            [routerLink]="['products']"
+            [routerLinkActive]="['active']"
+            [routerLinkActiveOptions]="{ exact: true }"
+            >Home</a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [routerLink]="['products', 'add']"
+            [routerLinkActive]="['active']"
+            >Nuevo producto</a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [routerLink]="['logout']"
+            (click)="logout()"
+          >Logout</a>
+        </li>
+      </ul>
+    }
   </div>
 </nav>

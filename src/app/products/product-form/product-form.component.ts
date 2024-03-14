@@ -25,7 +25,6 @@ import { NgClass } from '@angular/common';
 export class ProductFormComponent implements OnInit, CanComponentDeactivate {
   categories: Category[] = [];
 
-  imageFile = '';
   saved = false;
 
   #productsService = inject(ProductsService);

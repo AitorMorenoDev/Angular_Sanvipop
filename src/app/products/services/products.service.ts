@@ -7,6 +7,7 @@ import { ProductsResponse, SingleProductResponse } from '../interfaces/responses
 @Injectable({
   providedIn: 'root'
 })
+
 export class ProductsService {
   #productsUrl = 'products';
   #http = inject(HttpClient);

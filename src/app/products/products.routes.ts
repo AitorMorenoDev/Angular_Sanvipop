@@ -23,5 +23,16 @@ export const productsRoutes: Routes = [
       product: productResolver
     },
     component: ProductDetailComponent,
-  }
+  },
+  /*
+  {
+    path: 'edit/:id',
+    canActivate: [numericIdGuard],
+    canDeactivate: [leavePageGuard],
+    resolve: {
+      product: productResolver
+    },
+    component: ProductFormComponent,
+  },
+   */
 ];
