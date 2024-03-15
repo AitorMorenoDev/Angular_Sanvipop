@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { Product, ProductInsert } from '../interfaces/product';
+import {Product, ProductInsert, ProductUpdate} from '../interfaces/product';
 import { ProductsResponse, SingleProductResponse } from '../interfaces/responses';
 
 @Injectable({
@@ -47,7 +47,7 @@ export class ProductsService {
   }
 
   // Edit a product
-  editProduct(id: number, product: ProductInsert): Observable<Product> {
+  editProduct(id: number, product: ProductUpdate): Observable<Product> {
     product.category = +product.category;
     return this.#http
       .put<SingleProductResponse>(`${this.#productsUrl}/${id}`, product)

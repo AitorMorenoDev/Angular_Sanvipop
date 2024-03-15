@@ -14,6 +14,7 @@ import {MyGeolocation} from "../../geolocation";
 import {AuthService} from "../services/auth.service";
 import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";
 import {User} from "../interfaces/user";
+import Swal from "sweetalert2";
 
 @Component({
   selector: 'register-page',
@@ -75,12 +76,20 @@ export class RegisterPageComponent implements CanComponentDeactivate, OnInit {
   }
 
   canDeactivate() {
-    return (
-      this.saved || this.registerForm.pristine ||
-      confirm(
-        '¿Quieres abandonar la página?. Se perderán los cambios no guardados.'
-      )
-    );
+    if (this.saved || this.registerForm.pristine) {
+      return true;
+    }
+
+    return Swal.fire({
+      title: 'Changes not saved will be discarded',
+      text: 'Are you sure you want to leave this page?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, leave the page.',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      return result.isConfirmed;
+    });
   }
 
   imageBase64(event: Event) {
@@ -110,12 +119,30 @@ export class RegisterPageComponent implements CanComponentDeactivate, OnInit {
         lat: this.position.latitude,
         lng: this.position.longitude
       }
-      console.log("Name - " + newUser.name, "email - " + newUser.email, "pass - " + newUser.password, "photo - " + newUser.photo, "lat - " + newUser.lat, "lng - " + newUser.lng)
       this.#authService.register(newUser as User)
         .subscribe(() => {
-          this.saved = true;
-          this.#router.navigate(['/auth/login']);
-        });
+            Swal.fire({
+              title: 'Success!',
+              text: 'You have successfully registered.',
+              icon: 'success',
+              confirmButtonText: 'OK'
+            }).then(
+              () => {
+                this.saved = true;
+                this.#router.navigate(['/auth/login']).then(r => r);
+              }
+            );
+          }, error => {
+            Swal.fire({
+              title: 'Error!',
+              text: 'The register has failed.',
+              icon: 'error',
+              confirmButtonText: 'OK'
+            }).then(() =>
+              console.error(error)
+            );
+          }
+        );
     }
   }
 }

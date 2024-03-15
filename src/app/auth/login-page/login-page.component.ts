@@ -11,6 +11,7 @@ import {GoogleLoginDirective} from "../google-login/google-login.directive";
 import {faFacebook} from "@fortawesome/free-brands-svg-icons";
 import {FbLoginDirective} from "../facebook-login/fb-login.directive";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import Swal from "sweetalert2";
 
 @Component({
   selector: 'login-page',
@@ -82,11 +83,29 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       lat: this.position.latitude,
       lng: this.position.longitude
     }
-    console.log("email - " + user.email + " password - " + user.password + " lat - " + user.lat + " lng - " + user.lng)
     this.#authService.login(user as UserLogin)
       .subscribe(() => {
-        this.#router.navigate(['/products']).then(r => r);
-      });
+        Swal.fire({
+          title: 'Success!',
+          text: 'You have successfully logged in.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        }).then(
+          () => {
+            this.#router.navigate(['/products']).then(r => r);
+          }
+        );
+      }, error => {
+        Swal.fire({
+          title: 'Error!',
+          text: 'The email or password is incorrect.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        }).then(() =>
+          console.error(error)
+        );
+      }
+    );
   }
 
   // Method to login by Facebook

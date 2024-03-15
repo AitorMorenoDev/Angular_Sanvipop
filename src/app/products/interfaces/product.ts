@@ -13,6 +13,13 @@ export interface ProductInsert {
   mainPhoto: string;
 }
 
+export interface ProductUpdate {
+  title: string;
+  description: string;
+  category: number;
+  price: number;
+}
+
 export interface Product extends Omit<ProductInsert, "category"> {
   id: number;
   datePublished: string;

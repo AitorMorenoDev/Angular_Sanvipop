@@ -24,9 +24,8 @@ export const productsRoutes: Routes = [
     },
     component: ProductDetailComponent,
   },
-  /*
   {
-    path: 'edit/:id',
+    path: ':id/edit',
     canActivate: [numericIdGuard],
     canDeactivate: [leavePageGuard],
     resolve: {
@@ -34,5 +33,4 @@ export const productsRoutes: Routes = [
     },
     component: ProductFormComponent,
   },
-   */
 ];

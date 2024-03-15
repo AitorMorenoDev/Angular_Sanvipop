@@ -1,4 +1,4 @@
-<form class="mt-4" (ngSubmit)="addProduct()" [formGroup]="productForm">
+<form class="mt-4" (ngSubmit)="addOrEditProduct()" [formGroup]="productForm">
   <div class="mb-3">
     <label for="title">Título</label>
     <input
@@ -67,25 +67,27 @@
     </select>
     <div class="invalid-feedback">Debes seleccionar una categoría.</div>
   </div>
-  <div class="mb-3">
-    <label for="image">Foto principal</label>
-    <input
-      type="file"
-      class="form-control"
-      id="image"
-      formControlName="mainPhoto"
-      (change)="imageBase64($event)"
-      [ngClass]="validClasses(productForm.controls.mainPhoto, 'is-valid', 'is-invalid')"
+  @if (!isEdit) {
+    <div class="mb-3">
+      <label for="image">Foto principal</label>
+      <input
+        type="file"
+        class="form-control"
+        id="image"
+        formControlName="mainPhoto"
+        (change)="imageBase64($event)"
+        [ngClass]="validClasses(productForm.controls.mainPhoto, 'is-valid', 'is-invalid')"
 
-    />
-    <div class="invalid-feedback">La foto es obligatoria.</div>
-  </div>
+      />
+      <div class="invalid-feedback">La foto es obligatoria.</div>
+    </div>
 
-  @if(photoBase64) {
-    <img [src]="photoBase64" alt="" class="img-thumbnail mb-3" />
+    @if(photoBase64) {
+      <img [src]="photoBase64" alt="" class="img-thumbnail mb-3" />
+    }
   }
-
   <div>
     <button type="submit" class="btn btn-primary btn-lg" [disabled]="productForm.invalid">Crear</button>
   </div>
 </form>
+
