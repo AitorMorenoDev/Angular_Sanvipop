@@ -25,8 +25,7 @@ export class ProductsPageComponent implements OnInit {
   filteredProducts = computed(() =>
   this.products().filter((p) =>
     p.description.toLowerCase().includes(this.search().toLowerCase()) ||
-    p.title.toLowerCase().includes(this.search().toLowerCase())
-    )
+    p.title.toLowerCase().includes(this.search().toLowerCase()))
   );
 
   ngOnInit(): void {

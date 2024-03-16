@@ -39,13 +39,6 @@ export class ProductsService {
     return this.#http.delete<void>(`${this.#productsUrl}/${id}`);
   }
 
-  // Get own products
-  getOwnProducts(): Observable<Product[]> {
-    return this.#http
-      .get<ProductsResponse>(`${this.#productsUrl}/mine`)
-      .pipe(map((resp) => resp.products));
-  }
-
   // Edit a product
   editProduct(id: number, product: ProductUpdate): Observable<Product> {
     product.category = +product.category;
@@ -71,6 +64,13 @@ export class ProductsService {
     return this.#http.delete<void>(`${this.#productsUrl}/${id}/bookmarks`);
   }
 
+  // Get products being sold by me
+  getProductsSelling(): Observable<Product[]> {
+    return this.#http
+      .get<ProductsResponse>(`${this.#productsUrl}/mine`)
+      .pipe(map((resp) => resp.products));
+  }
+
   // Get products sold by me
   getProductsSold(): Observable<Product[]> {
     return this.#http
@@ -83,6 +83,13 @@ export class ProductsService {
     return this.#http
       .get<ProductsResponse>(`${this.#productsUrl}/mine/bought`)
       .pipe(map((resp) => resp.products));
+  }
+
+  // Get products being sold by other user
+  getProductsSellingUser(userId: number): Observable<Product[]> {
+    return this.#http
+      .get<ProductsResponse>(`${this.#productsUrl}/user/${userId}`)
+      .pipe(map((resp: ProductsResponse) => resp.products));
   }
 
   // Get products sold by other user
@@ -101,7 +108,8 @@ export class ProductsService {
 
   //Buy a product
   buyProduct(id: number): Observable<void> {
-    return this.#http.post<void>(`${this.#productsUrl}/${id}/buy`, {});
+    return this.#http
+      .put<void>(`${this.#productsUrl}/${id}/buy`, {});
   }
 
 

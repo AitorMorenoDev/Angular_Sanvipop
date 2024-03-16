@@ -6,29 +6,34 @@
     <input type="text" class="form-control" id="name" formControlName="name" placeholder="Name"
       [ngClass]="validClasses(name, 'is-valid', 'is-invalid')"/>
     @if(name.errors?.['required']) {
-      <div class="invalid-feedback">El nombre de usuario es obligatorio</div>
+      <div class="invalid-feedback">The username is required.</div>
     }
   </div>
 
-  <div class="mb-3" formGroupName="emailGroup">
+  <div class="mb-3" [formGroup]="emailGroup">
     <label for="email">Email:</label>
     <p><input type="email" class="form-control" id="email" placeholder="Email" formControlName="email"
           [ngClass]="validClasses(emailGroup.controls.email, 'is-valid', 'is-invalid')"/>
-    @if(emailGroup.controls.email.errors?.['required']) {
-      <div class="invalid-feedback">El email es obligatorio</div>
-    }
+      @if(emailGroup.controls.email.errors?.['required']) {
+        <div class="invalid-feedback">The email is required.</div>
+      }
+      @if (emailGroup.controls.email.errors?.['email']) {
+        <div class="invalid-feedback">The email is not valid.</div>
+      }
     </p>
 
     <label for="confirmEmail">Confirm Email:</label>
     <p><input type="email" class="form-control" id="confirmEmail" placeholder="Repeat email" formControlName="confirmEmail"
           [ngClass]="validClasses(emailGroup.controls.confirmEmail, 'is-valid', 'is-invalid')"/>
-    @if(emailGroup.controls.confirmEmail.errors?.['required']) {
-      <div class="invalid-feedback">La confirmación de email es obligatoria</div>
-    } @else {
-      @if (emailGroup.errors?.['matchEmail']) {
-        <div class="invalid-feedback">Los emails no coinciden</div>
+      @if(emailGroup.controls.confirmEmail.errors?.['required']) {
+        <div class="invalid-feedback">You must confirm the email.</div>
       }
-    }
+      @if (emailGroup.controls.confirmEmail.errors?.['email']) {
+        <div class="invalid-feedback">The email is not valid.</div>
+      }
+      @if (emailGroup.errors?.['matchEmail']) {
+        <div class="invalid-feedback">Emails do not match.</div>
+      }
     </p>
   </div>
 
@@ -37,10 +42,10 @@
     <input type="password" class="form-control" id="password" formControlName="password" placeholder="Password"
        [ngClass]="validClasses(password, 'is-valid', 'is-invalid')"/>
     @if(password.errors?.['required']) {
-      <div class="invalid-feedback">La contraseña es obligatoria</div>
+      <div class="invalid-feedback">The password is required.</div>
     } @else {
       @if (password.errors?.['minlength']) {
-        <div class="invalid-feedback">La contraseña debe tener al menos 4 caracteres</div>
+        <div class="invalid-feedback">The password must be at least 4 characters long.</div>
       }
     }
   </div>
@@ -64,7 +69,7 @@
            (change)="imageBase64($event)"
            [ngClass]="validClasses(photo, 'is-valid', 'is-invalid')"/>
     @if(photo.errors?.['required']) {
-      <div class="invalid-feedback">El avatar es obligatorio</div>
+      <div class="invalid-feedback">The user avatar is required.</div>
     }
   </div>
 

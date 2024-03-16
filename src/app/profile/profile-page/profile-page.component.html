@@ -1,0 +1,148 @@
+<div class="card btn-outline-dark mt-3 text-bg-light">
+  <div class="card-header bg-success text-white">
+    <h3 class="card-title text-center">Profile</h3>
+  </div>
+
+  <!-- Show avatar -->
+  <div class="card-body row mt-2 m-lg-2" id="profile">
+    <div class="col-3 text-center">
+      <div>
+        <img class="w-100" id="photo" src="{{user.photo}}" alt="" />
+        @if (user.me) {
+          <label class="btn btn-sm btn-warning mt-3">
+          Edit photo <fa-icon [icon]="icons.faImage"></fa-icon>
+          <input type="file" id="photoInput" class="d-none"
+          (change)="editPhoto($event)"/>
+          </label>
+        }
+      </div>
+    </div>
+
+    <!-- Show profile info -->
+    @if (!editingPassword && !editingProfile) {
+      <div class="col-3 pt-5 text-center" id="profileInfo">
+        <h4>{{ user.name }}</h4>
+        <h4>
+          <small class="text-muted">{{ user.email }}</small>
+        </h4>
+
+        @if (user.me) {
+          <div>
+            <button class="btn btn-primary w-75" id="editProfile" (click)="editingProfile = true">
+              Edit profile <fa-icon [icon]="icons.faPencil"></fa-icon>
+            </button>
+
+            <button class="btn btn-danger m-lg-2 w-75" id="editPassword" (click)="editingPassword = true">
+              Edit password <fa-icon [icon]="icons.faLock"></fa-icon>
+            </button>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Profile form-->
+    @if (editingProfile) {
+      <div class="col-3" id="profileForm">
+        <form (ngSubmit)="editProfile()" [formGroup]="editProfileForm">
+          <div class="mb-3">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" name="email" id="email" placeholder="Email" formControlName="email"
+              [ngClass]="validClasses(editProfileForm.controls.email, 'is-valid', 'is-invalid')"/>
+            @if (editProfileForm.controls.email.errors?.['required']) {
+              <div class="invalid-feedback">Email is required</div>
+            }
+            @if (editProfileForm.controls.email.errors?.['email']) {
+              <div class="invalid-feedback">Email is not valid</div>
+            }
+            <label for="name">Name:</label>
+            <input type="text" class="form-control" name="name" id="name" placeholder="Name" formControlName="name"
+              [ngClass]="validClasses(editProfileForm.controls.name, 'is-valid', 'is-invalid')"/>
+              @if (editProfileForm.controls.name.errors?.['required']) {
+                <div class="invalid-feedback">Name is required</div>
+              }
+          </div>
+          <button type="submit" class="btn btn-success" [disabled]="editProfileForm.invalid">Save changes</button>
+          <button type="button" class="btn btn-danger" id="cancelEditProfile" (click)="editingProfile = false">Cancel</button>
+        </form>
+      </div>
+    }
+
+    <!-- Password form-->
+    @if (editingPassword) {
+      <div class="col-3" id="passwordForm">
+        <form (ngSubmit)="editPassword()" [formGroup]="editPasswordForm">
+          <div class="mb-3">
+            <label for="password">Password:</label>
+            <input type="password" class="form-control" name="password" id="password" placeholder="Password" formControlName="password"
+            [ngClass]="validClasses(editPasswordForm.controls.password, 'is-valid', 'is-invalid')"/>
+            @if (editPasswordForm.controls.password.errors?.['required']) {
+              <div class="invalid-feedback">Password is required</div>
+            }
+            @if (editPasswordForm.controls.password.errors?.['minlength']) {
+              <div class="invalid-feedback">Password must have at least 4 characters</div>
+            }
+            <label for="confirmPassword">Repeat password:</label>
+            <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="Repeat password" formControlName="confirmPassword"
+            [ngClass]="validClasses(editPasswordForm.controls.confirmPassword, 'is-valid','is-invalid')"/>
+            @if (editPasswordForm.controls.confirmPassword.errors?.['required']) {
+              <div class="invalid-feedback">Password confirmation is required</div>
+            }
+            @if (editPasswordForm.controls.confirmPassword.errors?.['minlength']) {
+              <div class="invalid-feedback">Password must have at least 4 characters</div>
+            }
+            @if (editPasswordForm.errors?.['matchPassword']) {
+              <div class="invalid-feedback">Passwords do not match.</div>
+            }
+          </div>
+          <button type="submit" class="btn btn-success" [disabled]="editPasswordForm.invalid">Save changes</button>
+          <button type="button" class="btn btn-danger" id="cancelEditPassword" (click)="editingPassword = false">Cancel</button>
+        </form>
+      </div>
+    }
+
+    <!-- Show map -->
+    @if (coordinates.latitude !== 0 && coordinates.longitude !== 0) {
+      <div class="col-6 mb-4" id="map">
+        <div class="col-lg-6">
+          <bm-map [coords]="coordinates">
+            <bm-marker [coords]="coordinates" color="purple"></bm-marker>
+          </bm-map>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Buttons for fetching products -->
+  <div class="card-footer text-center">
+    <button class="btn btn-sm btn-info m-lg-2" (click)="fetchProducts('selling')">
+      Products selling <fa-icon [icon]="icons.faEuroSign"></fa-icon>
+    </button>
+    <button class="btn btn-sm btn-info m-lg-2" (click)="fetchProducts('sold')">
+      Products sold <fa-icon [icon]="icons.faHandHoldingUsd"></fa-icon>
+    </button>
+    <button class="btn btn-sm btn-info m-lg-2" (click)="fetchProducts('bought')">
+      Products bought <fa-icon [icon]="icons.faCoins"></fa-icon>
+    </button>
+    <button class="btn btn-sm btn-info m-lg-2" (click)="fetchProducts('favs')">
+      Favourite products <fa-icon [icon]="icons.faBookmark"></fa-icon>
+    </button>
+  </div>
+</div>
+
+<!-- Show products -->
+@if (sellingBool) {
+  <profile-product-section [products]="productsSellingUser" [title]="'Products selling'" (hide)="sellingBool = false">
+  </profile-product-section>
+}
+@if (soldBool) {
+  <profile-product-section [products]="productsSoldUser" [title]="'Products sold'" (hide)="soldBool = false">
+  </profile-product-section>
+}
+@if (boughtBool) {
+  <profile-product-section [products]="productsBoughtUser" [title]="'Products bought'" (hide)="boughtBool = false">
+  </profile-product-section>
+}
+@if (favBool) {
+  <profile-product-section [products]="productsFav" [title]="'Favourite products'" (hide)="favBool = false">
+  </profile-product-section>
+}

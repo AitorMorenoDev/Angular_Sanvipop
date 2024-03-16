@@ -25,8 +25,6 @@ export class AuthService {
     (map(r => {
       localStorage.setItem("token", r.accessToken);
       this.#logged.set(true);
-      console.log('Usuario logueado');
-      console.log('token: ', r.accessToken);
       return;
       }),
       catchError((error) => {

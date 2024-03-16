@@ -13,13 +13,11 @@ export const routes: Routes = [
     canActivate: [loginActivateGuard],
     loadChildren: () => import('./products/products.routes').then(m => m.productsRoutes),
   },
-  /*
   {
     path: 'profile',
     canActivate: [loginActivateGuard],
-    //loadChildren: () => import('./profile/profile.routes').then(m => m.profileRoutes),
+    loadChildren: () => import('./profile/profile.routes').then(m => m.profileRoutes),
   },
-  */
 
   {
     path: '',

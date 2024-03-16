@@ -6,7 +6,7 @@
     <input type="email" class="form-control" formControlName="email" name="email" id="email" placeholder="Email" required
     [ngClass]="validClasses(email, 'is-valid', 'is-invalid')"/>
     @if(email.errors?.['required']) {
-      <div class="invalid-feedback">El email es obligatorio</div>
+      <div class="invalid-feedback">The email is required.</div>
     }
   </div>
   <div class="mb-3">
@@ -14,7 +14,7 @@
     <input type="password" class="form-control" formControlName="password" name="password" id="password" placeholder="Password" required
     [ngClass]="validClasses(password, 'is-valid', 'is-invalid')"/>
     @if(password.errors?.['required']) {
-      <div class="invalid-feedback">La contraseña es obligatoria</div>
+      <div class="invalid-feedback">The password is required.</div>
     }
   </div>
   <p class="text-danger"></p>

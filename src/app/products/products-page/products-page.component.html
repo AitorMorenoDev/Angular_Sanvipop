@@ -1,5 +1,9 @@
-<nav class="navbar navbar-light bg-light justify-content-between mt-3">
-  <form class="container-fluid">
+<nav class="card navbar-light bg-light justify-content-between mt-4 mb-4">
+  <div class="card-header bg-success text-white">
+    <h3 class="card-title text-center">Search products</h3>
+  </div>
+
+  <form class="card-body container-fluid mb-3">
     <input
       class="form-control"
       type="text"
@@ -12,8 +16,19 @@
   </form>
 </nav>
 
-<div class="mb-4 mt-4 row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
-  @for (product of filteredProducts(); track product.id) {
-    <product-card class="col" [product]="product" (deleted)="deleteProduct(product)" />
-  }
+<div class="card">
+  <div class="card-header bg-success text-white">
+    <h3 class="card-title text-center">List of products</h3>
+  </div>
+
+  <div class="card-body mb-4 mt-4 row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+    @if (!filteredProducts().length) {
+      <div class="d-flex justify-content-center w-100">
+        <h3 class="align-items-center alert alert-warning"> No products found with that search criteria.</h3>
+      </div>
+    }
+    @for (product of filteredProducts(); track product.id) {
+      <product-card class="col" [product]="product" (deleted)="deleteProduct(product)"/>
+    }
+  </div>
 </div>

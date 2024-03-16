@@ -12,6 +12,7 @@ import {faFacebook} from "@fortawesome/free-brands-svg-icons";
 import {FbLoginDirective} from "../facebook-login/fb-login.directive";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import Swal from "sweetalert2";
+import {Title} from "@angular/platform-browser";
 
 @Component({
   selector: 'login-page',

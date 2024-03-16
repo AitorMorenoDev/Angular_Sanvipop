@@ -1,13 +1,24 @@
 import { Routes } from "@angular/router";
-import { leavePageGuard } from "../guards/leave-page.guard";
-import {productResolver} from "../products/resolvers/product.resolver";
+import {ProfilePageComponent} from "./profile-page/profile-page.component";
+import {profileResolver} from "./resolvers/profile.resolver";
+import {ownProfileResolver} from "./resolvers/own-profile.resolver";
 
-export const productsRoutes: Routes = [
-  /*{
+
+export const profileRoutes: Routes = [
+  {
+    path: '',
+    resolve: {
+      product: ownProfileResolver
+    },
+    component: ProfilePageComponent,
+    title: 'My profile | Sanvipop',
+  },
+  {
     path: ':id',
     resolve: {
-      product: productResolver
+      product: profileResolver
     },
-    component: ,
-  },*/
+    component: ProfilePageComponent,
+    title: 'Profile | Sanvipop',
+  }
 ];

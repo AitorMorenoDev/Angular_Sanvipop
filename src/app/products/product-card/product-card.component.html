@@ -17,11 +17,11 @@
     <div class="row">
 
       <div class="col-auto avatar ps-1 pe-1">
-        <img class="rounded-circle" src="{{product.owner.photo}}" width="40px" height="40px" alt="" />
+        <img class="rounded-circle" src="{{product.owner.photo}}" (click)="goProfilePage()" width="40px" height="40px" alt="" />
       </div>
 
       <div class="col">
-        <div class="name">{{ product.owner.name }}</div>
+        <div class="name" (click)="goProfilePage()">{{ product.owner.name }}</div>
         <div>
           <small class="text-muted">{{ product.datePublished |  date: 'HH:mm dd/MM/yyyy' }}</small>
         </div>
@@ -37,28 +37,27 @@
           <fa-icon [icon]="icons.faPencil"></fa-icon>
         </button>
       </div>
-      } @else { <!-- (I understand that the user can bookmark other's users products, it makes no sense to mark own products.-->
-        @if (product.bookmarked) {
+      } @else { <!-- (I understand that the user can bookmark other's users products, it makes no sense to mark own products.)-->
+        @if (!product.bookmarked && product.status === 1) {
           <div class="col-auto">
-            <button class="btn btn-danger btn-sm float-end m-lg-1" (click)="unbookmark()">
+            <button class="btn btn-success btn-sm float-end m-lg-1" (click)="bookmark()">
               <fa-icon [icon]="icons.faBookmark"></fa-icon>
             </button>
           </div>
-        } @else {
+        } @else if (product.bookmarked && product.status === 1){
           <div class="col-auto">
-            <button class="btn btn-success btn-sm float-end m-lg-1" (click)="bookmark()">
+            <button class="btn btn-danger btn-sm float-end m-lg-1" (click)="unbookmark()">
               <fa-icon [icon]="icons.faBookmark"></fa-icon>
             </button>
           </div>
         }
       }
 
-
       <div class="col-auto text-muted text-right">
         <div class="col-auto text-right">
           <small>{{ product.numVisits }} <fa-icon [icon]="icons.faEye"></fa-icon></small>
         </div>
-        <div><small>{{ product.distance }}km</small></div>
+        <div><small>{{ product.distance | number: '1.2-2'}}km</small></div>
       </div>
 
     </div>

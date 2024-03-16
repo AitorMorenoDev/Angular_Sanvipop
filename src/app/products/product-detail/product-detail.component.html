@@ -1,29 +1,45 @@
-<div class="mt-4">
-  <product-card
-    class="col"
-    [product]="product"
-    (deleted)="goBack()"
-  />
-</div>
-<div class="mt-4 mb-4">
-  <button class="btn btn-dark" (click)="goBack()">Go back</button>
-  @if (product.status === 3) {
-    <button class="m-lg-3 btn btn-warning" (click)="buyProduct()">Buy product<fa-icon class="m-lg-1" [icon]="faCartPlus"></fa-icon> </button>
-  } @else if (product.status === 1) {
-    <hr>
-    <div class="card p-3 text-bg-info">
-      <div class="row">
-        <h3>Product bought by: </h3>
-        <div class="col-auto avatar ps-1 pe-1">
-          <!-- {product.soldTo.photo}} -->
-          <img class="rounded-circle" src="{{product.owner.photo}}"  width="40px" height="40px" alt="" />
-        </div>
+<div class="card m-3">
 
-        <div class="col">
-          <!-- {{product.soldTo.name}} -->
-          <h5 class="name"><u>{{ product.owner.name }}</u></h5>
+  <div class="card-header bg-success text-white">
+    <h3 class="card-title text-center">Product detail: {{product.title}}</h3>
+  </div>
+
+  <div class="mt-4">
+    <product-card
+      class="col"
+      [product]="product"
+      (deleted)="goBack()"
+    />
+  </div>
+
+  <div class="text-center mt-4 mb-4">
+    <button class="btn btn-dark" (click)="goBack()">Go back</button>
+    @if (product.status === 1) {
+      <button class="m-lg-3 btn btn-warning" (click)="buyProduct()">
+        Buy product<fa-icon class="m-lg-1" [icon]="icons.faCartPlus"></fa-icon>
+      </button>
+        <div class="row justify-content-center align-items-center" id="map">
+          <h3 class="text-bg-success text-white m-3 p-2 w-75">Owner's location</h3>
+          <div class="col-lg-7 justify-content-center align-items-center">
+            <bm-map [coords]="coordinates">
+              <bm-marker [coords]="coordinates" color="purple"></bm-marker>
+            </bm-map>
+          </div>
+        </div>
+    } @else if (product.status === 3) {
+      <hr>
+      <div class="card p-3 text-bg-info">
+        <div class="row">
+          <h3>Product bought by: </h3>
+          <div class="col-auto avatar ps-1 pe-1">
+            <img class="rounded-circle" src="{{serverRoute + product.soldTo.photo}}"  width="40px" height="40px" alt="" />
+          </div>
+
+          <div class="col">
+            <h5 class="name"><u>{{ product.soldTo.name }}</u></h5>
+          </div>
         </div>
       </div>
-    </div>
-  }
+    }
+  </div>
 </div>

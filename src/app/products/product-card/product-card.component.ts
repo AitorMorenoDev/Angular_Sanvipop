@@ -49,8 +49,8 @@ export class ProductCardComponent implements OnInit {
     this.#router.navigate(['products', this.product.id, 'edit']);
   }
 
-  cancel() {
-    this.#router.navigate(['products']);
+  goProfilePage() {
+    this.#router.navigate(['profile', this.product.owner.id]);
   }
 
   bookmark() {
@@ -63,9 +63,5 @@ export class ProductCardComponent implements OnInit {
     this.#productsService
       .removeFavoriteProduct(this.product.id)
       .subscribe(() => this.product.bookmarked = false);
-  }
-
-  getFavs() {
-    console.log(this.#productsService.getFavoriteProducts());
   }
 }

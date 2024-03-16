@@ -7,10 +7,12 @@ export const authRoutes: Routes = [
   {
     path: 'login',
     component: LoginPageComponent,
+    title: 'Login | Sanvipop',
   },
   {
     path: 'register',
     canDeactivate: [leavePageGuard],
-    component: RegisterPageComponent
+    component: RegisterPageComponent,
+    title: 'Register | Sanvipop',
   },
 ];
