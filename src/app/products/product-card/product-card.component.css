@@ -1,3 +1,15 @@
 .card-img-top, .card-title, .rounded-circle, .name{
   cursor: pointer;
 }
+
+.carousel-control-prev{
+  filter: invert(100%)
+}
+
+.carousel-control-next{
+  filter: invert(100%)
+}
+
+.carousel-indicators button {
+  border: 1px solid #000;
+}

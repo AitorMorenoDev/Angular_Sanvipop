@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {inject, Injectable} from '@angular/core';
+import {map, Observable} from 'rxjs';
 import {Product, ProductInsert, ProductUpdate} from '../interfaces/product';
-import { ProductsResponse, SingleProductResponse } from '../interfaces/responses';
+import {ProductsResponse, SingleProductResponse} from '../interfaces/responses';
+import {Photo} from "../interfaces/photo";
 
 @Injectable({
   providedIn: 'root'
@@ -64,27 +65,6 @@ export class ProductsService {
     return this.#http.delete<void>(`${this.#productsUrl}/${id}/bookmarks`);
   }
 
-  // Get products being sold by me
-  getProductsSelling(): Observable<Product[]> {
-    return this.#http
-      .get<ProductsResponse>(`${this.#productsUrl}/mine`)
-      .pipe(map((resp) => resp.products));
-  }
-
-  // Get products sold by me
-  getProductsSold(): Observable<Product[]> {
-    return this.#http
-      .get<ProductsResponse>(`${this.#productsUrl}/mine/sold`)
-      .pipe(map((resp) => resp.products));
-  }
-
-  // Get products bought by me
-  getProductsBought(): Observable<Product[]> {
-    return this.#http
-      .get<ProductsResponse>(`${this.#productsUrl}/mine/bought`)
-      .pipe(map((resp) => resp.products));
-  }
-
   // Get products being sold by other user
   getProductsSellingUser(userId: number): Observable<Product[]> {
     return this.#http
@@ -112,6 +92,19 @@ export class ProductsService {
       .put<void>(`${this.#productsUrl}/${id}/buy`, {});
   }
 
+  // Add photos to a product
+  addPhotos(id: number, photo: string): Observable<Photo> {
+    return this.#http
+      .post<Photo>(`${this.#productsUrl}/${id}/photos`, {photo});
+  }
 
+  // Delete a photo from a product
+  deletePhoto(id: number, idPhoto: number): Observable<void> {
+    return this.#http.delete<void>(`${this.#productsUrl}/${id}/photos/${idPhoto}`);
+  }
 
+  mainPhoto(id: number, idPhoto: number): Observable<void> {
+    return this.#http
+      .put<void>(`${this.#productsUrl}/${id}`, {mainPhoto: idPhoto});
+  }
 }

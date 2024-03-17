@@ -1,6 +1,31 @@
 <div class="card h-100 shadow">
-  <!-- Image -->
-  <img class="card-img-top" alt="" [src]="product.mainPhoto" [routerLink]="['/products', product.id]" />
+  @if (!product.photos || product.photos.length <= 1) {
+    <!-- Image -->
+    <img class="card-img-top" alt="" [src]="product.mainPhoto" [routerLink]="['/products', product.id]" />
+  } @else {
+    <!-- Carrusel -->
+    <ngb-carousel class="text-center">
+      @for (photo of product.photos; track photo.id) {
+        <ng-template ngbSlide>
+          <div class="picsum-img-wrapper">
+            <img [src]="photo.url" alt="Random first slide" />
+          </div>
+          <div class="carousel-caption mb-0">
+            @if (product.mine)
+            {
+              <label class="btn btn-success m-lg-1" (click)="mainPhoto(product.id, photo.id!)">
+                <fa-icon class="m-lg-1" [icon]="icons.faStar"></fa-icon>
+              </label>
+
+              <label class="btn btn-danger m-lg-1" (click)="deletePhoto(photo.id!)">
+                <fa-icon class="m-lg-1" [icon]="icons.faTrash"></fa-icon>
+              </label>
+            }
+          </div>
+        </ng-template>
+      }
+    </ngb-carousel>
+  }
 
   <!-- Card Body -->
   <div class="card-body">
@@ -17,11 +42,11 @@
     <div class="row">
 
       <div class="col-auto avatar ps-1 pe-1">
-        <img class="rounded-circle" src="{{product.owner.photo}}" (click)="goProfilePage()" width="40px" height="40px" alt="" />
+        <img class="rounded-circle" src="{{product.owner.photo}}" [routerLink]="['/profile', this.product.owner.id]" width="40px" height="40px" alt="" />
       </div>
 
       <div class="col">
-        <div class="name" (click)="goProfilePage()">{{ product.owner.name }}</div>
+        <div class="name" [routerLink]="['/profile', this.product.owner.id]">{{ product.owner.name }}</div>
         <div>
           <small class="text-muted">{{ product.datePublished |  date: 'HH:mm dd/MM/yyyy' }}</small>
         </div>
@@ -33,7 +58,7 @@
           <fa-icon [icon]="icons.faTrash"></fa-icon>
         </button>
 
-        <button class="btn btn-warning btn-sm float-end m-lg-1" (click)="goEditPage()">
+        <button class="btn btn-warning btn-sm float-end m-lg-1" [routerLink]="['/products', this.product.id, 'edit']">
           <fa-icon [icon]="icons.faPencil"></fa-icon>
         </button>
       </div>

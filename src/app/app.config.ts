@@ -11,6 +11,7 @@ import {provideFacebookId} from "./auth/facebook-login/facebook-login.config";
 import {provideBingmapsKey} from "./profile/bingmaps/bingmaps.config";
 import { provideClientHydration } from '@angular/platform-browser';
 import {provideAnimationsAsync} from "@angular/platform-browser/animations/async";
+import {provideNgxStripe} from "ngx-stripe";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -26,5 +27,6 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(SweetAlert2Module.forRoot()),
     provideClientHydration(),
     provideAnimationsAsync(),
+    provideNgxStripe("pk_test_51OvPUhH6zS5GbLVd6sA37rrBNGeDrSux6l9NJb1frStxaq8RaNLvtnn5tAvROJNVGfs3FE4PcdWgRTrmeg5SGc5U00YmmPYlEX"),
   ],
 };

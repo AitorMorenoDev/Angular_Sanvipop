@@ -1,26 +1,27 @@
-import {Component, EventEmitter, Input, Output, inject, OnInit} from '@angular/core';
-import { Product } from '../interfaces/product';
+import {Component, EventEmitter, inject, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {Product} from '../interfaces/product';
 import {CurrencyPipe, DatePipe, DecimalPipe} from '@angular/common';
-import { ProductsService } from '../services/products.service';
-import { RouterLink } from '@angular/router';
+import {ProductsService} from '../services/products.service';
+import {RouterLink} from '@angular/router';
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
-import {faBookmark, faEye, faPencil, faTrash} from "@fortawesome/free-solid-svg-icons";
-import {Router} from "@angular/router";
+import {faBookmark, faEye, faPencil, faStar, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";
 import Swal from "sweetalert2";
+import {NgbCarousel, NgbCarouselModule, NgbNavItem, NgbSlide} from "@ng-bootstrap/ng-bootstrap";
+
 @Component({
   selector: 'product-card',
   standalone: true,
-  imports: [CurrencyPipe, RouterLink, FontAwesomeModule, SweetAlert2Module, DatePipe, DecimalPipe],
+  imports: [CurrencyPipe, RouterLink, FontAwesomeModule, SweetAlert2Module, DatePipe, DecimalPipe, NgbCarousel, NgbSlide, NgbCarouselModule, NgbNavItem],
   templateUrl: './product-card.component.html',
   styleUrl: './product-card.component.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class ProductCardComponent implements OnInit {
   @Input({ required: true }) product!: Product;
   @Output() deleted = new EventEmitter<void>();
   #productsService = inject(ProductsService);
-  #router = inject(Router);
-  icons = {faTrash, faEye, faPencil, faBookmark}
+  icons = {faTrash, faEye, faPencil, faBookmark, faStar}
 
   ngOnInit() {
     parseFloat(String(this.product.price)).toFixed(2);
@@ -44,15 +45,6 @@ export class ProductCardComponent implements OnInit {
     });
   }
 
-
-  goEditPage() {
-    this.#router.navigate(['products', this.product.id, 'edit']);
-  }
-
-  goProfilePage() {
-    this.#router.navigate(['profile', this.product.owner.id]);
-  }
-
   bookmark() {
     this.#productsService
       .addFavoriteProduct(this.product.id)
@@ -63,5 +55,37 @@ export class ProductCardComponent implements OnInit {
     this.#productsService
       .removeFavoriteProduct(this.product.id)
       .subscribe(() => this.product.bookmarked = false);
+  }
+
+  deletePhoto(idPhoto: number) {
+    this.#productsService
+      .deletePhoto(this.product.id, idPhoto)
+      .subscribe(() => {
+        Swal.fire({
+          title: 'Success!',
+          text: 'Photo deleted successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          this.product.photos = this.product.photos.filter(photo => photo.id !== idPhoto);
+        });
+      });
+  }
+
+  mainPhoto(id: number, idPhoto: number) {
+    this.#productsService.mainPhoto(id, idPhoto).subscribe(() => {
+      Swal.fire({
+        title: 'Success!',
+        text: 'You have successfully updated your photo.',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      }).then(
+        () => {
+          this.#productsService.getProduct(this.product.id).subscribe(r => {
+            this.product = r;
+          });
+        }
+      );
+    });
   }
 }

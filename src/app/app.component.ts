@@ -1,9 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { MenuTopComponent } from './menu-top/menu-top.component';
+import {RouterOutlet} from '@angular/router';
+import {MenuTopComponent} from './menu-top/menu-top.component';
 import {AuthService} from "./auth/services/auth.service";
-import {animate, animateChild, group, query, style, transition, trigger} from "@angular/animations";
-import {delay} from "rxjs";
+import {animate, group, query, style, transition, trigger} from "@angular/animations";
 
 // Animation constants
   // For swipe animations

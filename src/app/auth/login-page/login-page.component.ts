@@ -173,7 +173,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   // Method to go to the register page
   goRegister() {
-    this.#router.navigate(['/auth/register']);
+    this.#router.navigate(['/auth/register']).then(r => r);
   }
 
 

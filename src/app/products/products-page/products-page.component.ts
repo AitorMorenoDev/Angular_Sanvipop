@@ -4,7 +4,7 @@ import { ProductFormComponent } from '../product-form/product-form.component';
 import { ProductCardComponent } from '../product-card/product-card.component';
 import { FormsModule } from '@angular/forms';
 import { ProductsService } from '../services/products.service';
-import {animate, stagger, state, style, transition, trigger} from "@angular/animations";
+import {animate, stagger, style, transition, trigger} from "@angular/animations";
 import {query} from "@angular/animations";
 
 @Component({

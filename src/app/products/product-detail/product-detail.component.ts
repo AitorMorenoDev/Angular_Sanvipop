@@ -1,20 +1,21 @@
-import {Component, Input, inject, OnInit} from '@angular/core';
-import { Product } from '../interfaces/product';
-import { Router } from '@angular/router';
-import { ProductCardComponent } from '../product-card/product-card.component';
+import {Component, inject, Input, OnInit} from '@angular/core';
+import {Product} from '../interfaces/product';
+import {Router} from '@angular/router';
+import {ProductCardComponent} from '../product-card/product-card.component';
 import {ProductsService} from "../services/products.service";
-import {faCartPlus} from "@fortawesome/free-solid-svg-icons";
+import {faCartPlus, faImage} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import Swal from "sweetalert2";
 import {BmAutosuggestDirective} from "../../profile/bingmaps/bm-autosuggest.directive";
 import {BmMapDirective} from "../../profile/bingmaps/bm-map.directive";
 import {BmMarkerDirective} from "../../profile/bingmaps/bm-maker.directive";
 import {Coordinates} from "../../profile/bingmaps/coordinates";
+import {StripeCardGroupDirective, StripeElementsDirective} from "ngx-stripe";
 
 @Component({
   selector: 'product-detail',
   standalone: true,
-  imports: [ProductCardComponent, FaIconComponent, BmAutosuggestDirective, BmMapDirective, BmMarkerDirective],
+  imports: [ProductCardComponent, FaIconComponent, BmAutosuggestDirective, BmMapDirective, BmMarkerDirective, StripeCardGroupDirective, StripeElementsDirective],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css'
 })
@@ -23,9 +24,10 @@ export class ProductDetailComponent implements OnInit {
 
   #router = inject(Router);
   #productService = inject(ProductsService);
-  icons = {faCartPlus};
+  icons = {faCartPlus, faImage};
   // Server route to use it to get the buyer photo (the server returns a relative route)
-  serverRoute = "http://api.fullstackpro.es/sanvipop/";
+  serverRoute = "https://api.fullstackpro.es/sanvipop/";
+  photoToAdd: string = '';
 
   coordinates: Coordinates = {latitude: 0, longitude: 0};
 
@@ -36,7 +38,7 @@ export class ProductDetailComponent implements OnInit {
     }
   }
   goBack() {
-    this.#router.navigate(['/products']);
+    this.#router.navigate(['/products']).then(r => r);
   }
 
   buyProduct() {
@@ -55,5 +57,38 @@ export class ProductDetailComponent implements OnInit {
           })
         });
     });
+  }
+
+  addPhoto(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files?.length) {
+      return;
+    }
+
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(input.files[0]);
+
+    fileReader.addEventListener(
+      'load',
+      () => {
+        this.photoToAdd = fileReader.result as string;
+
+        this.#productService.addPhotos(this.product.id, this.photoToAdd).subscribe(() => {
+          Swal.fire({
+            title: 'Success!',
+            text: 'You have successfully updated your photo.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          }).then(
+            () => {
+              this.#productService.getProduct(this.product.id).subscribe(r => {
+                this.product = r;
+              });
+            }
+          );
+        })
+      }
+    );
   }
 }

@@ -1,19 +1,13 @@
-import {Component, OnInit, inject} from '@angular/core';
-import {
-  FormControl, NgForm,
-  NonNullableFormBuilder,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
+import {Component, inject, OnInit} from '@angular/core';
+import {FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
-import { CanComponentDeactivate } from '../../interfaces/can-component-deactivate';
-import { positiveValueValidator } from '../../validators/positive-value.validator';
-import { Category } from '../interfaces/category';
+import {CanComponentDeactivate} from '../../interfaces/can-component-deactivate';
+import {positiveValueValidator} from '../../validators/positive-value.validator';
+import {Category} from '../interfaces/category';
 import {Product} from '../interfaces/product';
-import { CategoriesService } from '../services/categories.service';
-import { ProductsService } from '../services/products.service';
+import {CategoriesService} from '../services/categories.service';
+import {ProductsService} from '../services/products.service';
 import {NgClass, NgIf} from '@angular/common';
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import Swal from "sweetalert2";
 
 @Component({

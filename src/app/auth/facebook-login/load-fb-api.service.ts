@@ -13,7 +13,7 @@ export class LoadFbApiService {
   constructor() {
     if (!this.#fbConfig) {
       throw new Error(
-        'FacebookLogiService: You must call provideFacebookId in app.config.ts to pass the APP_ID and API Version'
+        'FacebookLoginService: You must call provideFacebookId in app.config.ts to pass the APP_ID and API Version'
       );
     }
     this.#loader = this.#loadApi();

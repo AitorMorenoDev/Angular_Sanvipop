@@ -8,7 +8,7 @@ export const productResolver: ResolveFn<Product> = (route) => {
   const router = inject(Router);
   return inject(ProductsService).getProduct(+route.params['id']).pipe(
     catchError(() => {
-      router.navigate(['/products']);
+      router.navigate(['/products']).then(r => console.log(r));
       return EMPTY;
     })
   );

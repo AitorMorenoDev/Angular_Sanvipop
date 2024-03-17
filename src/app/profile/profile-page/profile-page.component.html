@@ -134,6 +134,11 @@
 <!-- Show products -->
 @if (sellingBool) {
   <profile-product-section [products]="productsSellingUser" [title]="'Products selling'" (hide)="sellingBool = false">
+    @if (productsSellingUser.length === 0) {
+      <div class="alert alert-warning mt-3" role="alert">
+        No products selling
+      </div>
+    })
   </profile-product-section>
 }
 @if (soldBool) {

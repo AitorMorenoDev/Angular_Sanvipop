@@ -1,11 +1,11 @@
 import {Component, inject, Input, numberAttribute, OnInit} from '@angular/core';
-import {Router} from "@angular/router";
 import {UserService} from "../services/user.service";
 import {User} from "../../auth/interfaces/user";
 import {
   faBookmark,
   faCoins,
-  faEuroSign, faEyeSlash,
+  faEuroSign,
+  faEyeSlash,
   faHandHoldingUsd,
   faImage,
   faLock,
@@ -171,7 +171,7 @@ export class ProfilePageComponent implements OnInit {
       () => {
         this.avatarB64 = fileReader.result as string
 
-        this.#userService.editPhoto(this.avatarB64).subscribe(r => {
+        this.#userService.editPhoto(this.avatarB64).subscribe(() => {
           Swal.fire({
             title: 'Success!',
             text: 'You have successfully updated your photo.',

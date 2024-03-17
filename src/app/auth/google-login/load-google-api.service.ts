@@ -1,7 +1,6 @@
 import {inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {CLIENT_ID} from "./google-login.config";
-import {Subject, fromEvent, firstValueFrom} from "rxjs";
-import {Router} from "@angular/router";
+import {Subject} from "rxjs";
 import {isPlatformBrowser} from "@angular/common";
 
 @Injectable({
