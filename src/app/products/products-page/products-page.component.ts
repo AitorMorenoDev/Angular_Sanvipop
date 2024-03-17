@@ -4,6 +4,8 @@ import { ProductFormComponent } from '../product-form/product-form.component';
 import { ProductCardComponent } from '../product-card/product-card.component';
 import { FormsModule } from '@angular/forms';
 import { ProductsService } from '../services/products.service';
+import {animate, stagger, state, style, transition, trigger} from "@angular/animations";
+import {query} from "@angular/animations";
 
 @Component({
   selector: 'products-page',
@@ -15,7 +17,21 @@ import { ProductsService } from '../services/products.service';
   ],
   templateUrl: './products-page.component.html',
   styleUrl: './products-page.component.css',
+  animations: [
+    trigger('animateList', [
+      transition(':increment', [
+        query('product-card:enter', [
+          style({opacity: 0, transform: 'translateY(500px)'}),
+          stagger(
+    200,
+            animate('1s ease-out', style({opacity: 1, transform: 'none'}))
+          ),
+        ]),
+      ]),
+    ]),
+  ],
 })
+
 export class ProductsPageComponent implements OnInit {
   products: WritableSignal<Product[]> = signal([]);
   search = signal('');
@@ -28,6 +44,7 @@ export class ProductsPageComponent implements OnInit {
     p.title.toLowerCase().includes(this.search().toLowerCase()))
   );
 
+  // Getting the products from the service on init
   ngOnInit(): void {
     this.#productsService.getProducts().subscribe({
       next: (products) => this.products.set(products),
@@ -35,9 +52,11 @@ export class ProductsPageComponent implements OnInit {
     });
   }
 
+  // Method to delete a product
   deleteProduct(product: Product) {
     this.products.update((products) =>
       products.filter((p) => p.id !== product.id)
     );
   }
+
 }

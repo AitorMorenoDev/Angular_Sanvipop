@@ -1,9 +1,9 @@
-import {Component, inject, NgZone, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, inject, NgZone, OnDestroy, OnInit, PLATFORM_ID} from '@angular/core';
 import {FormControl, ReactiveFormsModule, NonNullableFormBuilder, Validators} from '@angular/forms';
 import {Router, RouterOutlet} from '@angular/router';
 import {AuthService} from "../services/auth.service";
 import {MyGeolocation} from "../../geolocation";
-import {NgClass} from "@angular/common";
+import {isPlatformBrowser, NgClass} from "@angular/common";
 import {UserLogin, UserLoginRRSS} from "../interfaces/user";
 import {LoadGoogleApiService} from "../google-login/load-google-api.service";
 import {Subscription} from "rxjs";
@@ -12,7 +12,6 @@ import {faFacebook} from "@fortawesome/free-brands-svg-icons";
 import {FbLoginDirective} from "../facebook-login/fb-login.directive";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import Swal from "sweetalert2";
-import {Title} from "@angular/platform-browser";
 
 @Component({
   selector: 'login-page',
@@ -31,27 +30,52 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   credentialsSub!: Subscription;
   position: { latitude: number; longitude: number } = {latitude: 0, longitude: 0};
 
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+  ) {}
+
   // Method OnInit to get the user's location
   async ngOnInit() {
-    try {
-      this.position = await MyGeolocation.getLocation();
-    } catch (error) {
-      console.error("Error getting location: ", error);
-      this.position = {latitude: 0, longitude: 0};
+
+    if (isPlatformBrowser(this.platformId)) {
+      try {
+        this.position = await MyGeolocation.getLocation();
+      } catch (error) {
+        console.error("Error getting location: ", error);
+        this.position = {latitude: 0, longitude: 0};
+      }
     }
 
     // Subscribe to the logged signal
     this.credentialsSub = this.#loadGoogle.credential$.subscribe((response) => {
       // Log into the server with the Google token
-      this.#ngZone.run(() => {
-        if (response.credential) {
-          this.#authService.loginGoogle({token: response.credential, lat: this.position.latitude, lng: this.position.longitude}).subscribe(
-            () => {
-              this.#router.navigate(['/products']).then(r => r);
-            }
-          );
-        }
-      });
+      if (response.credential) {
+        this.#authService
+          .loginGoogle({token: response.credential, lat: this.position.latitude, lng: this.position.longitude})
+          .subscribe(() => {
+            Swal.fire({
+              title: 'Success!',
+              text: 'You have successfully logged in by Google.',
+              icon: 'success',
+              confirmButtonText: 'OK'
+            }).then(
+              () => {
+                this.#ngZone.run(() => {
+                  this.#router.navigate(['/products']).then(r => r);
+                });
+              }
+            );
+          }, error => {
+            Swal.fire({
+              title: 'Error!',
+              text: 'The email or password is incorrect.',
+              icon: 'error',
+              confirmButtonText: 'OK'
+            }).then(() =>
+              console.error(error)
+            );
+          });
+      }
     });
   }
 
@@ -84,7 +108,8 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       lat: this.position.latitude,
       lng: this.position.longitude
     }
-    this.#authService.login(user as UserLogin)
+    this.#authService
+      .login(user as UserLogin)
       .subscribe(() => {
         Swal.fire({
           title: 'Success!',
@@ -116,12 +141,28 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       lat: this.position.latitude,
       lng: this.position.longitude
     }
-    console.log("Facebook response: ", response.authResponse.accessToken);
-    console.log("latitude: ", this.position.latitude);
-    console.log("longitude: ", this.position.longitude);
-    this.#authService.loginFacebook(user as UserLoginRRSS)
+    this.#authService
+      .loginFacebook(user as UserLoginRRSS)
       .subscribe(() => {
-        this.#router.navigate(['/products']).then(r => r);
+        Swal.fire({
+          title: 'Success!',
+          text: 'You have successfully logged in by facebook.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        }).then(
+          () => {
+            this.#router.navigate(['/products']).then(r => r);
+          }
+        );
+      }, error => {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Facebook login went wrong.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        }).then(() =>
+          console.error(error)
+        );
       });
   }
 

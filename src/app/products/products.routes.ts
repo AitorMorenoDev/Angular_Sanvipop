@@ -11,12 +11,14 @@ export const productsRoutes: Routes = [
     path: '',
     component: ProductsPageComponent,
     title: 'Products | Sanvipop',
+    data: {animation: 'productsPage'},
   },
   {
     path: 'add',
     canDeactivate: [leavePageGuard],
     component: ProductFormComponent,
     title: 'Add new product | Sanvipop',
+    data: {animation: 'productForm'},
   },
   {
     path: ':id',
@@ -26,6 +28,7 @@ export const productsRoutes: Routes = [
     },
     component: ProductDetailComponent,
     title: 'Product detail | Sanvipop',
+    data: {animation: 'productDetail'},
   },
   {
     path: ':id/edit',
@@ -36,5 +39,6 @@ export const productsRoutes: Routes = [
     },
     component: ProductFormComponent,
     title: 'Edit product | Sanvipop',
+    data: {animation: 'productForm'},
   },
 ];

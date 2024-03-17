@@ -12,6 +12,7 @@ export const profileRoutes: Routes = [
     },
     component: ProfilePageComponent,
     title: 'My profile | Sanvipop',
+    data: {animation: 'profile'},
   },
   {
     path: ':id',
@@ -20,5 +21,6 @@ export const profileRoutes: Routes = [
     },
     component: ProfilePageComponent,
     title: 'Profile | Sanvipop',
+    data: {animation: 'profile'},
   }
 ];

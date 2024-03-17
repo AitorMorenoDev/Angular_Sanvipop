@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import {User, UserLogin, UserLoginRRSS} from "../interfaces/user";
 import {catchError, map, Observable, of, throwError} from "rxjs";
 import {TokenResponse} from "../interfaces/responses";
+import {SsrCookieService} from "ngx-cookie-service-ssr";
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class AuthService {
   #authUrl = 'auth';
   #router = inject(Router);
   #logged = signal(false);
+  cookieService = inject(SsrCookieService);
 
   // Getter to check if the user is logged
   get logged() {
@@ -23,7 +25,7 @@ export class AuthService {
   login(data: UserLogin): Observable<void> {
     return this.#http.post<TokenResponse>(`${this.#authUrl}/login`, data).pipe
     (map(r => {
-      localStorage.setItem("token", r.accessToken);
+      this.cookieService.set("token", r.accessToken);
       this.#logged.set(true);
       return;
       }),
@@ -38,7 +40,7 @@ export class AuthService {
   loginGoogle(data: UserLoginRRSS): Observable<void> {
     return this.#http.post<TokenResponse>(`${this.#authUrl}/google`, data).pipe(
       map(r => {
-        localStorage.setItem('token', r.accessToken);
+        this.cookieService.set('token', r.accessToken);
         this.#logged.set(true);
         console.log('Usuario logueado con Google');
         return;
@@ -54,7 +56,7 @@ export class AuthService {
   loginFacebook(data: UserLoginRRSS): Observable<void> {
     return this.#http.post<TokenResponse>(`${this.#authUrl}/facebook`, data).pipe(
       map(r => {
-        localStorage.setItem('token', r.accessToken);
+        this.cookieService.set('token', r.accessToken);
         this.#logged.set(true);
         console.log('Usuario logueado con Facebook');
         return;
@@ -81,7 +83,7 @@ export class AuthService {
 
   // Method to logout
   logout(): void {
-    localStorage.removeItem('token');
+    this.cookieService.delete('token');
     this.#logged.set(false);
     this.#router.navigate(['/auth/login']).then(r => r);
   }
@@ -93,7 +95,7 @@ export class AuthService {
 
   // Method to check if the user is logged
   isLogged(): Observable<boolean> {
-    const token = localStorage.getItem('token');
+    const token = this.cookieService.get('token');
 
     if (!this.logged() && !token) {
       return of(false);
@@ -106,7 +108,7 @@ export class AuthService {
           return true;
         }),
         catchError(() => {
-          localStorage.removeItem('token');
+          this.cookieService.delete('token');
           this.#logged.set(false);
           return of(false);
         })

@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, Inject, inject, OnInit, PLATFORM_ID} from '@angular/core';
 import {
   FormControl,
   FormsModule,
@@ -9,7 +9,7 @@ import {
 import {Router} from "@angular/router";
 import {CanComponentDeactivate} from "../../interfaces/can-component-deactivate";
 import {matchEmail} from "../../validators/matchEmail.validator";
-import {NgClass} from "@angular/common";
+import {isPlatformBrowser, NgClass} from "@angular/common";
 import {MyGeolocation} from "../../geolocation";
 import {AuthService} from "../services/auth.service";
 import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";
@@ -37,12 +37,18 @@ export class RegisterPageComponent implements CanComponentDeactivate, OnInit {
 
   position: { latitude: number; longitude: number } = {latitude: 0, longitude: 0};
 
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+  ) {}
+
   async ngOnInit() {
-    try {
-      this.position = await MyGeolocation.getLocation();
-    } catch (error) {
-      console.error("Error getting location: ", error);
-      this.position = {latitude: 0, longitude: 0};
+    if(isPlatformBrowser(this.platformId)) {
+      try {
+        this.position = await MyGeolocation.getLocation();
+      } catch (error) {
+        console.error("Error getting location: ", error);
+        this.position = {latitude: 0, longitude: 0};
+      }
     }
   }
 
@@ -65,7 +71,7 @@ export class RegisterPageComponent implements CanComponentDeactivate, OnInit {
   avatarB64 = '';
 
   goLogin() {
-    this.#router.navigate(['/auth/login']);
+    this.#router.navigate(['/auth/login']).then(r => r);
   }
 
   validClasses(formControl: FormControl, validClass: string, errorClass: string) {

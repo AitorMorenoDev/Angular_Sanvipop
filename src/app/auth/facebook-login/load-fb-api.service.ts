@@ -1,14 +1,14 @@
-import { Injectable, inject } from '@angular/core';
+import {Injectable, inject, PLATFORM_ID} from '@angular/core';
 import { FB_CONFIG } from './facebook-login.config';
-import { Observable, ReplaySubject } from 'rxjs';
+import {isPlatformBrowser} from "@angular/common";
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoadFbApiService {
   #loader: Promise<void>;
-
   #fbConfig = inject(FB_CONFIG, { optional: true });
+  platformId = inject(PLATFORM_ID);
 
   constructor() {
     if (!this.#fbConfig) {
@@ -64,22 +64,26 @@ export class LoadFbApiService {
   }
 
   #loadApi(): Promise<void> {
-    const script = document.createElement('script');
-    script.id = 'facebook-jssdk';
-    script.src = 'https://connect.facebook.net/es_ES/sdk.js';
-    script.defer = true;
-    document.body.appendChild(script);
+    if (isPlatformBrowser(this.platformId)) {
+      const script = document.createElement('script');
+      script.id = 'facebook-jssdk';
+      script.src = 'https://connect.facebook.net/es_ES/sdk.js';
+      script.defer = true;
+      document.body.appendChild(script);
 
-    return new Promise((resolve) => {
-      window['fbAsyncInit'] = () => {
-        FB.init({
-          appId: this.#fbConfig!.app_id,
-          xfbml: true,
-          autoLogAppEvents: true,
-          version: this.#fbConfig!.version,
-        });
-        resolve();
-      };
-    });
+      return new Promise((resolve) => {
+        window['fbAsyncInit'] = () => {
+          FB.init({
+            appId: this.#fbConfig!.app_id,
+            xfbml: true,
+            autoLogAppEvents: true,
+            version: this.#fbConfig!.version,
+          });
+          resolve();
+        };
+      });
+    } else {
+      return Promise.resolve();
+    }
   }
 }
