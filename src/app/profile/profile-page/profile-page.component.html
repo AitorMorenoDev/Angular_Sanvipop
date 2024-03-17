@@ -123,9 +123,11 @@
     <button class="btn btn-sm btn-info m-lg-2" (click)="fetchProducts('bought')">
       Products bought <fa-icon [icon]="icons.faCoins"></fa-icon>
     </button>
-    <button class="btn btn-sm btn-info m-lg-2" (click)="fetchProducts('favs')">
-      Favourite products <fa-icon [icon]="icons.faBookmark"></fa-icon>
-    </button>
+    @if (user.me) {
+      <button class="btn btn-sm btn-info m-lg-2" (click)="fetchProducts('favs')">
+        Favourite products <fa-icon [icon]="icons.faBookmark"></fa-icon>
+      </button>
+    }
   </div>
 </div>
 

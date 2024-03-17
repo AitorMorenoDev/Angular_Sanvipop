@@ -197,17 +197,17 @@ export class ProfilePageComponent implements OnInit {
     switch (type) {
       case 'selling':
         this.sellingBool = true;
-        fetchMethod = this.id ? this.#productsService.getProductsSellingUser(this.user.id!) : this.#productsService.getProductsSelling();
+        fetchMethod = this.#productsService.getProductsSellingUser(this.user.id!);
         productsArray = 'productsSellingUser';
         break;
       case 'sold':
         this.soldBool = true;
-        fetchMethod = this.id ? this.#productsService.getProductsSoldByUser(this.user.id!) : this.#productsService.getProductsSold();
+        fetchMethod = this.#productsService.getProductsSoldByUser(this.user.id!);
         productsArray = 'productsSoldUser';
         break;
       case 'bought':
         this.boughtBool = true;
-        fetchMethod = this.id ? this.#productsService.getProductsBoughtByUser(this.user.id!) : this.#productsService.getProductsBought();
+        fetchMethod = this.#productsService.getProductsBoughtByUser(this.user.id!);
         productsArray = 'productsBoughtUser';
         break;
       case 'favs':
